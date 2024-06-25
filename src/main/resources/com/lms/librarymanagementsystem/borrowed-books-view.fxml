@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="596.0" prefWidth="757.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.BorrowedBooksController">
+    <TableView fx:id="allBooksTable" layoutX="50.0" layoutY="50.0" prefHeight="300.0" prefWidth="700.0">
+        <columns>
+            <TableColumn fx:id="idColumn" prefWidth="100.0" text="ID" />
+            <TableColumn fx:id="bookNameColumn" prefWidth="200.0" text="Name" />
+            <TableColumn fx:id="borrowerNameColumn" prefWidth="200.0" text="Borrower" />
+            <TableColumn fx:id="librarianNameColumn" prefWidth="200.0" text="Librarian" />
+            <TableColumn fx:id="borrowedAtColumn" prefWidth="200.0" text="Borrowed at" />
+        </columns>
+    </TableView>
+<!--    <Button layoutX="213.0" layoutY="14.0" onAction="#handleAddBookButton" text="Add Book"/>-->
+    <Button id="lend_book" defaultButton="true" layoutX="677.0" layoutY="7.0" mnemonicParsing="false" onAction="#goToAllBooks" text="All books" />
+
+    <Text layoutX="50.0" layoutY="364.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Borrow book" />
+   <ComboBox fx:id="bookNameCombo" layoutX="51.0" layoutY="373.0" prefWidth="150.0" promptText="Book name" />
+   <ComboBox fx:id="borrowerNameCombo" layoutX="216.0" layoutY="373.0" prefWidth="150.0" promptText="Borrower name" />
+   <Button fx:id="lendBookBtn" layoutX="379.0" layoutY="373.0" mnemonicParsing="false" onAction="#handleLendBook" text="Lend" />
+
+    <Text layoutX="51.0" layoutY="423.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Return book" />
+   <ComboBox fx:id="borrowedBooksCombo" layoutX="51.0" layoutY="435.0" onAction="#getBorrower" prefWidth="150.0" promptText="Borrowed book" />
+   <Label fx:id="bookBorrowerName" layoutX="216.0" layoutY="439.0" text="Borrower name" />
+   <Button layoutX="327.0" layoutY="435.0" mnemonicParsing="false" onAction="#returnBook" text="Return book" />
+   <TextField fx:id="borrowerNameField" layoutX="561.0" layoutY="373.0" promptText="Borrower name" />
+   <Button onAction="#addBorrower" fx:id="borrowerAddBtn" layoutX="561.0" layoutY="414.0" mnemonicParsing="false" text="Add borrower" />
+</AnchorPane>
