@@ -17,6 +17,9 @@ import models.BookModel;
 import models.BorrowModel;
 import models.BorrowerModel;
 import models.LibrarianModel;
+import services.BookService;
+import services.BorrowerService;
+import services.LibrarianService;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -60,7 +63,7 @@ public class BorrowedBooksController {
 
     @FXML
     private void initialize() throws SQLException {
-        LibrarianDAOImpl librarianDAO = new LibrarianDAOImpl();
+        LibrarianService librarianService = new LibrarianService();
 
         // Bind the columns to the BorrowModel properties
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -71,7 +74,7 @@ public class BorrowedBooksController {
 
         // Initialize the borrow list and set it to the TableView
         borrowList = FXCollections.observableArrayList(
-                librarianDAO.getBorrows()
+                librarianService.getBorrows()
         );
         allBooksTable.setItems(borrowList);
         loadBooksAndBorrowers();
@@ -79,13 +82,13 @@ public class BorrowedBooksController {
 
     @FXML
     private void loadBooksAndBorrowers() throws SQLException {
-        BookDAOImpl bookDAO = new BookDAOImpl();
-        BorrowerDAOImpl borrowerDAO = new BorrowerDAOImpl();
-        LibrarianDAOImpl librarianDAO = new LibrarianDAOImpl();
+        BookService bookService = new BookService();
+        BorrowerService borrowerService = new BorrowerService();
+        LibrarianService librarianService = new LibrarianService();
 
-        List<BookModel> books = bookDAO.getAll();
-        List<BorrowerModel> borrowerModels = borrowerDAO.getAll();
-        List<BorrowModel> borrowedBooks = librarianDAO.getBorrows();
+        List<BookModel> books = bookService.getBooks();
+        List<BorrowerModel> borrowerModels = borrowerService.getAll();
+        List<BorrowModel> borrowedBooks = librarianService.getBorrows();
 
         List<String> bookNames = books.stream().map(book -> book.getId() + " # " + book.getName()).toList();
         List<String> borrowerNames = borrowerModels.stream().map(borrowerModel -> borrowerModel.getId() + " # " + borrowerModel.getName()).toList();
@@ -104,9 +107,9 @@ public class BorrowedBooksController {
     @FXML
     private void getBorrower() throws SQLException {
         int transactionId = Integer.valueOf(borrowedBooksCombo.getValue().toString().split(" # ")[0]);
-        LibrarianDAOImpl librarianDAO = new LibrarianDAOImpl();
+        LibrarianService librarianService = new LibrarianService();
 
-        BorrowModel borrowModel = librarianDAO.getBorrow(transactionId);
+        BorrowModel borrowModel = librarianService.getBorrow(transactionId);
 
         bookBorrowerName.setText(borrowModel.getBorrowerName());
     }
@@ -116,9 +119,9 @@ public class BorrowedBooksController {
         String[] bookName = bookNameCombo.getValue().toString().split((" # "));
         String[] borrowerName = borrowerNameCombo.getValue().toString().split(" # ");
 
-        LibrarianDAOImpl librarianDAO = new LibrarianDAOImpl();
+        LibrarianService librarianService = new LibrarianService();
 
-        librarianDAO.lendBook(Integer.valueOf(bookName[0]), Integer.valueOf(borrowerName[0]), 1);
+        librarianService.lendBook(Integer.valueOf(bookName[0]), Integer.valueOf(borrowerName[0]), 1);
 
         initialize();
     }
@@ -126,17 +129,18 @@ public class BorrowedBooksController {
     public void returnBook(ActionEvent actionEvent) throws SQLException {
         int transactionId = Integer.valueOf(borrowedBooksCombo.getValue().toString().split(" # ")[0]);
 
-        LibrarianDAOImpl librarianDAO = new LibrarianDAOImpl();
+        LibrarianService librarianService = new LibrarianService();
 
-        librarianDAO.receiveBook(transactionId);
+        librarianService.receiveBook(transactionId);
         initialize();
     }
 
-    public void addBorrower(ActionEvent actionEvent) throws SQLException {
-        BorrowerDAOImpl borrowerDAO = new BorrowerDAOImpl();
+    public void addBorrower(ActionEvent actionEvent) throws Exception {
+        BorrowerService borrowerService = new BorrowerService();
         String borrowerName = borrowerNameField.getText();
 
-        borrowerDAO.insert(new BorrowerModel(1, borrowerName));
+        borrowerService.insert(new BorrowerModel(1, borrowerName));
+
         initialize();
     }
 

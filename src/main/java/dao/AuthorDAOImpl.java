@@ -61,21 +61,9 @@ public class AuthorDAOImpl implements DAO<AuthorModel> {
 
         int result = ps.executeUpdate();
 
-        Database.closePreparedStatement(ps);
-        Database.closeConnection(con);
+        ps.close();
+        con.close();
 
         return result;
     }
-
-
-    @Override
-    public int update(AuthorModel authorModel) throws SQLException {
-        return 0;
-    }
-
-    @Override
-    public int delete(AuthorModel authorModel) throws SQLException {
-        return 0;
-    }
-
 }

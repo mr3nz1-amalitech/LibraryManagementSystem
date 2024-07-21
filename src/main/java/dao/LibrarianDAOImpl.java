@@ -3,6 +3,7 @@ package dao;
 import DB.Database;
 import dao.interfaces.LibrarianDAO;
 import models.BorrowModel;
+import models.GenreModel;
 import models.LibrarianModel;
 import models.ReturnModel;
 
@@ -24,8 +25,8 @@ public class LibrarianDAOImpl implements LibrarianDAO<LibrarianModel> {
 
         int rs = ps.executeUpdate();
 
-        Database.closePreparedStatement(ps);
-        Database.closeConnection(con);
+        ps.close();
+        con.close();
 
         return rs;
     }
@@ -39,9 +40,8 @@ public class LibrarianDAOImpl implements LibrarianDAO<LibrarianModel> {
 
         int rs = ps.executeUpdate();
 
-        Database.closePreparedStatement(ps);
-        Database.closeConnection(con);
-
+        ps.close();
+        con.close();
         return rs;
     }
 
@@ -70,6 +70,10 @@ public class LibrarianDAOImpl implements LibrarianDAO<LibrarianModel> {
             borrows.add(borrow);
         }
 
+        ps.close();
+        rs.close();
+        con.close();
+
         return borrows;
     }
 
@@ -83,6 +87,10 @@ public class LibrarianDAOImpl implements LibrarianDAO<LibrarianModel> {
 
         rs.next();
         BorrowModel borrow = new BorrowModel(rs.getInt("id"), rs.getString("book_name"), rs.getString("borrower_name"), rs.getString("librarian_name"), rs.getDate("borrowed_at"));
+
+        ps.close();
+        rs.close();
+        con.close();
 
         return borrow;
     }
@@ -117,15 +125,33 @@ public class LibrarianDAOImpl implements LibrarianDAO<LibrarianModel> {
 
         LibrarianModel librarianModel = new LibrarianModel(rs.getInt("id"), rs.getString("name"));
 
-        Database.closePreparedStatement(ps);
-        Database.closeConnection(con);
+        ps.close();
+        rs.close();
+        con.close();
 
         return librarianModel;
     }
 
     @Override
     public List<LibrarianModel> getAll() throws SQLException {
-        return List.of();
+        Connection con = Database.getConnection();
+        String sql = "SELECT * FROM librarians";
+
+        PreparedStatement ps = con.prepareStatement(sql);
+
+        ResultSet rs = ps.executeQuery();
+        List<LibrarianModel> librarians = new java.util.ArrayList<>(List.of());
+
+        while (rs.next()) {
+            LibrarianModel librarian = new LibrarianModel(rs.getInt("id"), rs.getString("name"));
+            librarians.add(librarian);
+        }
+
+        ps.close();
+        rs.close();
+        con.close();
+
+        return librarians;
     }
 
     @Override
@@ -137,19 +163,10 @@ public class LibrarianDAOImpl implements LibrarianDAO<LibrarianModel> {
 
 
         int rs = ps.executeUpdate();
-        Database.closePreparedStatement(ps);
-        Database.closeConnection(con);
+
+        ps.close();
+        con.close();
 
         return rs;
-    }
-
-    @Override
-    public int update(LibrarianModel librarianModel) throws SQLException {
-        return 0;
-    }
-
-    @Override
-    public int delete(LibrarianModel librarianModel) throws SQLException {
-        return 0;
     }
 }

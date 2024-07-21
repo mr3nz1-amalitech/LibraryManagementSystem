@@ -30,35 +30,16 @@ public class BorrowModel {
         return bookName;
     }
 
-    public void setBookName(String bookName) {
-        this.bookName = bookName;
-    }
-
     public Date getBorrowed_at() {
         return borrowed_at;
-    }
-
-    public void setBorrowed_at(Date borrowed_at) {
-        this.borrowed_at = borrowed_at;
     }
 
     public String getBorrowerName() {
         return borrowerName;
     }
 
-    public void setBorrowerName(String borrowerName) {
-        this.borrowerName = borrowerName;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getLibrarianName() {
         return librarianName;
-    }
-
-    public void setLibrarianName(String librarianName) {
-        this.librarianName = librarianName;
     }
 }

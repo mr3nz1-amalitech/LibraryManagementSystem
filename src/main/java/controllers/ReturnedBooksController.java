@@ -16,6 +16,8 @@ import javafx.stage.Stage;
 import models.BookModel;
 import models.BorrowerModel;
 import models.ReturnModel;
+import services.BookService;
+import services.LibrarianService;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -63,7 +65,7 @@ public class ReturnedBooksController {
     @FXML
     private void initialize() throws SQLException {
         try {
-            LibrarianDAOImpl librarianDAO = new LibrarianDAOImpl();
+            LibrarianService librarianService = new LibrarianService();
 
             // Bind the columns to the ReturnModel properties
             idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -75,7 +77,7 @@ public class ReturnedBooksController {
             borrowedAtColumn.setCellValueFactory(new PropertyValueFactory<>("borrowedAt"));
             returnedAtColumn.setCellValueFactory(new PropertyValueFactory<>("returnedAt"));
 
-            List<ReturnModel> returns = librarianDAO.getReturns();
+            List<ReturnModel> returns = librarianService.getReturns();
 
             // Initialize the borrow list and set it to the TableView
             returnList = FXCollections.observableArrayList(
@@ -90,8 +92,8 @@ public class ReturnedBooksController {
 
     @FXML
     private void loadBorrowedBooks() throws SQLException {
-        BookDAOImpl bookDAO = new BookDAOImpl();
-        List<BookModel> books = bookDAO.getAll();
+        BookService bookService = new BookService();
+        List<BookModel> books = bookService.getBooks();
         List<String> bookNames = books.stream().map(book -> book.getId() + " # " + book.getName()).toList();
         bookNameCombo.getItems().clear();
         bookNameCombo.getItems().addAll(bookNames);

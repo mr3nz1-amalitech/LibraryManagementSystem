@@ -26,6 +26,9 @@ import java.util.stream.Collectors;
 
 import javafx.scene.control.ComboBox;
 import models.GenreModel;
+import services.AuthorService;
+import services.BookService;
+import services.GenreService;
 
 public class BookController {
 
@@ -61,7 +64,7 @@ public class BookController {
 
     @FXML
     private void initialize() throws SQLException {
-        BookDAOImpl bookDAO = new BookDAOImpl();
+        BookService bookService = new BookService();
 
         // Bind the columns to the Book properties
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -70,20 +73,20 @@ public class BookController {
         genreColumn.setCellValueFactory(new PropertyValueFactory<>("genre"));
 
         // Initialize the book list and set it to the TableView
-        bookList = FXCollections.observableArrayList(bookDAO.getAll());
+        bookList = FXCollections.observableArrayList(bookService.getBooks());
         allBooksTable.setItems(bookList);
         loadAuthorsAndGenres();
     }
 
     @FXML
     private void loadAuthorsAndGenres() throws SQLException {
-        AuthorDAOImpl authorDAO = new AuthorDAOImpl();
-        GenreDAOImpl genreDAO = new GenreDAOImpl();
+        AuthorService authorService = new AuthorService();
+        GenreService genreService = new GenreService();
 
-        List<AuthorModel> authorModelList = authorDAO.getAll();
+        List<AuthorModel> authorModelList = authorService.getAuthors();
         List<String> authorNames = authorModelList.stream().map(author -> author.getId() + " # " + author.getName()).toList();
 
-        List<GenreModel> genreModelList = genreDAO.getAll();
+        List<GenreModel> genreModelList = genreService.getGenres();
         List<String> genreNames = genreModelList.stream().map(genre -> genre.getId() + " # " + genre.getName()).toList();
 
         authorsCombobox.getItems().clear();
@@ -103,10 +106,10 @@ public class BookController {
         AuthorModel authorModel = new AuthorModel(Integer.valueOf(authorVals[0]), authorVals[1]);
         GenreModel genreModel = new GenreModel(Integer.valueOf(authorVals[0]), genreVals[1]);
 
-        BookDAOImpl bookDAO = new BookDAOImpl();
+        BookService bookService = new BookService();
 
-        BookModel bookModel = new BookModel(1, bookName,  authorModel.getName(), genreModel.getName());
-        bookDAO.insert(bookModel, authorModel, genreModel);
+        BookModel bookModel = new BookModel(1, bookName, authorModel.getName(), genreModel.getName());
+        bookService.addBook(bookModel, authorModel, genreModel);
 
         bookNameInput.clear();
         initialize();

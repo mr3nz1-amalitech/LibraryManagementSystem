@@ -10,15 +10,13 @@ import java.sql.*;
 import java.util.List;
 
 public class BookDAOImpl implements BookDAO<BookModel> {
-    @Override
-    public int delete(BookModel bookModel) throws SQLException {
-        return 0;
-    }
 
     @Override
     public BookModel get(int id) throws SQLException {
         Connection con = Database.getConnection();
-        String sql = "SELECT books.id, books.name, authors.name AS author, genres.name AS genre  FROM books INNER JOIN authors ON (books.author_id = authors.id) INNER JOIN genres ON (books.genre_id = genres.id) WHERE id = ?";
+
+        String sql = "SELECT books.id, books.name, authors.name AS author, genres.name AS genre  FROM books INNER JOIN authors ON (books.author_id = authors.id) INNER JOIN genres ON (books.genre_id = genres.id) WHERE books.id = ?";
+
         PreparedStatement ps = con.prepareStatement(sql);
         ps.setInt(1, id);
 
@@ -28,8 +26,8 @@ public class BookDAOImpl implements BookDAO<BookModel> {
 
         BookModel bookModel = new BookModel(rs.getInt("id"), rs.getString("name"), rs.getString("author"), rs.getString("genre"));
 
-        Database.closePreparedStatement(ps);
-        Database.closeConnection(con);
+        ps.close();
+        con.close();
 
         return bookModel;
     }
@@ -48,6 +46,10 @@ public class BookDAOImpl implements BookDAO<BookModel> {
             bookModels.add(bookModel);
         }
 
+        ps.close();
+        rs.close();
+        con.close();
+
         return bookModels;
     }
 
@@ -61,7 +63,7 @@ public class BookDAOImpl implements BookDAO<BookModel> {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        int generatedId = -1; // Initialize with a default value
+        int generatedId;
 
         try {
             con = Database.getConnection();
@@ -90,15 +92,14 @@ public class BookDAOImpl implements BookDAO<BookModel> {
 
         } finally {
             // Close resources in reverse order of their creation
-            Database.closeResultSet(rs);
-            Database.closePreparedStatement(ps);
-            Database.closeConnection(con);
+            ps.close();
+            rs.close();
+            con.close();
         }
 
         // Print the generated ID (optional)
         System.out.println("Generated ID: " + generatedId);
-
-        // Return the generated ID
+        
         return generatedId;
     }
 
@@ -130,12 +131,11 @@ public class BookDAOImpl implements BookDAO<BookModel> {
             bookModels.add(bookModel);
         }
 
+        ps.close();
+        rs.close();
+        con.close();
+
         return bookModels;
     }
 
-
-    @Override
-    public int update(BookModel bookModel) throws SQLException {
-        return 0;
-    }
 }

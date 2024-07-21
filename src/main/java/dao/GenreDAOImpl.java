@@ -13,11 +13,6 @@ import java.util.List;
 
 public class GenreDAOImpl implements DAO<GenreModel> {
     @Override
-    public int delete(GenreModel genreModel) throws SQLException {
-        return 0;
-    }
-
-    @Override
     public GenreModel get(int id) throws SQLException {
         Connection con = Database.getConnection();
         String sql = "SELECT * FROM genres WHERE id = ?";
@@ -28,6 +23,10 @@ public class GenreDAOImpl implements DAO<GenreModel> {
         rs.next();
 
         String name = rs.getString("name");
+
+        ps.close();
+        rs.close();
+        con.close();
 
         return new GenreModel(id, name);
     }
@@ -46,6 +45,10 @@ public class GenreDAOImpl implements DAO<GenreModel> {
             genreModels.add(genreModel);
         }
 
+        ps.close();
+        rs.close();
+        con.close();
+
         return genreModels;
 
     }
@@ -62,15 +65,9 @@ public class GenreDAOImpl implements DAO<GenreModel> {
 
         int rs = ps.executeUpdate();
 
-        Database.closePreparedStatement(ps);
-        Database.closeConnection(con);
+        ps.close();
+        con.close();
 
         return rs;
-    }
-
-
-    @Override
-    public int update(GenreModel genreModel) throws SQLException {
-        return 0;
     }
 }

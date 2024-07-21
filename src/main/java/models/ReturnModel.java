@@ -43,40 +43,20 @@ public class ReturnModel {
         return authorName;
     }
 
-    public void setAuthorName(String authorName) {
-        this.authorName = authorName;
-    }
-
     public String getBookName() {
         return bookName;
-    }
-
-    public void setBookName(String bookName) {
-        this.bookName = bookName;
     }
 
     public Date getBorrowedAt() {
         return borrowedAt;
     }
 
-    public void setBorrowedAt(Date borrowedAt) {
-        this.borrowedAt = borrowedAt;
-    }
-
     public String getBorrowerName() {
         return borrowerName;
     }
 
-    public void setBorrowerName(String borrowerName) {
-        this.borrowerName = borrowerName;
-    }
-
     public String getGenreName() {
         return genreName;
-    }
-
-    public void setGenreName(String genreName) {
-        this.genreName = genreName;
     }
 
     public int getId() {
@@ -91,15 +71,7 @@ public class ReturnModel {
         return librarianName;
     }
 
-    public void setLibrarianName(String librarianName) {
-        this.librarianName = librarianName;
-    }
-
     public Date getReturnedAt() {
         return returnedAt;
-    }
-
-    public void setReturnedAt(Date returnedAt) {
-        this.returnedAt = returnedAt;
     }
 }

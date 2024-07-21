@@ -25,8 +25,9 @@ public class BorrowerDAOImpl implements BorrowerDAO<BorrowerModel> {
 
         BorrowerModel borrowerModel = new BorrowerModel(rs.getInt("id"), rs.getString("name"));
 
-        Database.closePreparedStatement(ps);
-        Database.closeConnection(con);
+        ps.close();
+        rs.close();
+        con.close();
 
         return borrowerModel;
     }
@@ -45,6 +46,10 @@ public class BorrowerDAOImpl implements BorrowerDAO<BorrowerModel> {
             borrowers.add(bookModel);
         }
 
+        ps.close();
+        rs.close();
+        con.close();
+
         return borrowers;
     }
 
@@ -57,19 +62,10 @@ public class BorrowerDAOImpl implements BorrowerDAO<BorrowerModel> {
 
 
         int rs = ps.executeUpdate();
-        Database.closePreparedStatement(ps);
-        Database.closeConnection(con);
 
+        ps.close();
+        con.close();
+        
         return rs;
-    }
-
-    @Override
-    public int update(BorrowerModel borrowerModel) throws SQLException {
-        return 0;
-    }
-
-    @Override
-    public int delete(BorrowerModel borrowerModel) throws SQLException {
-        return 0;
     }
 }
